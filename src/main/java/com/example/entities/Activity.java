@@ -1,36 +1,29 @@
 package com.example.entities;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.example.entities.Entities;
 
-public class Activity extends Entities {
+public class Activity extends Entities implements Serializable{
+    private static final long serialVersionUID = 1L;
     private String label;
     private String description;
     private String web_site;
     private int min_older;
     private String street;
     private String zip_code;
-    private List<Integer> id_tag;
     private String cover;
     private String slogan;
     private Double price;
 
     @Override
     public String toString() {
-        return "{" +
-            " id='" + getId() + "'" +
-            " label='" + getLabel() + "'" +
-            ", description='" + getDescription() + "'" +
-            ", web_site='" + getWeb_site() + "'" +
-            ", min_older='" + getMin_older() + "'" +
-            ", street='" + getStreet() + "'" +
-            ", zip_code='" + getZip_code() + "'" +
-            ", id_tag='" + getId_tag() + "'" +
-            ", cover='" + getCover() + "'" +
-            ", slogan='" + getSlogan() + "'" +
-            ", price='" + getPrice() + "'" +
-            "}";
+        return "{" + " id='" + getId() + "'" + " label='" + getLabel() + "'" + ", description='" + getDescription()
+                + "'" + ", web_site='" + getWeb_site() + "'" + ", min_older='" + getMin_older() + "'" + ", street='"
+                + getStreet() + "'" + ", zip_code='" + getZip_code() + "'" + ", id_tag='" + getId_tag() + "'"
+                + ", cover='" + getCover() + "'" + ", slogan='" + getSlogan() + "'" + ", price='" + getPrice() + "'"
+                + "}";
     }
 
     public String getLabel() {
@@ -81,14 +74,6 @@ public class Activity extends Entities {
         this.zip_code = zip_code;
     }
 
-    public List<Integer> getId_tag() {
-        return this.id_tag;
-    }
-
-    public void setId_tag(List<Integer> id_tag) {
-        this.id_tag = id_tag;
-    }
-
     public String getCover() {
         return this.cover;
     }
@@ -113,7 +98,8 @@ public class Activity extends Entities {
         this.price = price;
     }
 
-    public Activity(int id, String label, String description, String web_site, int min_older, String street, String zip_code, List<Integer> id_tag, String cover, String slogan, Double price) {
+    public Activity(int id, String label, String description, String web_site, int min_older, String street,
+            String zip_code, String cover, String slogan, Double price) {
         this.id = id;
         this.label = label;
         this.description = description;
@@ -121,7 +107,6 @@ public class Activity extends Entities {
         this.min_older = min_older;
         this.street = street;
         this.zip_code = zip_code;
-        this.id_tag = id_tag;
         this.cover = cover;
         this.slogan = slogan;
         this.price = price;

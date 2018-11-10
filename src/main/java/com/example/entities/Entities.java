@@ -1,7 +1,10 @@
 package com.example.entities;
 
-public abstract class Entities {
-    protected int id;
+import java.io.Serializable;
+
+public abstract class Entities implements Serializable {
+    private static final long serialVersionUID = 1L;
+	protected int id;
 
     public int getId() {
         return this.id;
@@ -9,13 +12,11 @@ public abstract class Entities {
 
     public void setId(int id) {
         this.id = id;
-    }    
+    }
 
     @Override
     public String toString() {
-        return "{" +
-            " id='" + getId() + "'" +
-            "}";
+        return "{" + " id='" + getId() + "'" + "}";
     }
 
     @Override

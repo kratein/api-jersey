@@ -1,5 +1,6 @@
 package com.example.main;
 
+import org.apache.log4j.BasicConfigurator;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -49,6 +50,7 @@ public class Main{
      */
     public static void main(String[] args) throws IOException {
         final HttpServer server = startServer();
+        BasicConfigurator.configure();
         System.out.println(String.format("Jersey app started with WADL available at "
                 + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
         System.in.read();
