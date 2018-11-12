@@ -75,13 +75,12 @@ public class TagService {
     @GET
     @Path("{id}")
     public Response getTag(@PathParam("id") int id) {
-        Response response;
-        Tag tag = tagDAO.findTagById(id);
-        if (tag != null) {
-            response = Response.status(Status.OK).entity(tag).build();
-        } else {
-            response = Response.status(Status.NOT_FOUND).entity(tag).build();
-        }
-        return response;
+        return Response.status(Status.OK).entity(tagDAO.findTagById(id)).build();
+    }
+
+    @GET
+    @Path("/activity/{id}")
+    public Response getTabByActivity(@PathParam("id") int id_activity) {  
+        return Response.status(Status.OK).entity(tagDAO.findTagsByIdActivity(id_activity)).build();
     }
 }

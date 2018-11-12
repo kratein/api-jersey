@@ -1,9 +1,5 @@
 package com.example.services;
 
-import com.example.dao.PhotoDAO;
-import com.example.entities.Photo;
-import com.example.exception.CustomException;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -16,21 +12,24 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-@Path("/photo")
-@Produces(MediaType.APPLICATION_JSON)
-public class PhotoService {
+import com.example.dao.UserDAO;
+import com.example.entities.User;
+import com.example.exception.CustomException;
 
-    private final PhotoDAO photoDAO = new PhotoDAO();
+@Path("/user")
+@Produces(MediaType.APPLICATION_JSON)
+public class UserService {
+    private final UserDAO userDAO = new UserDAO();
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createPhoto(Photo photo) {
+    public Response createUser(User user) {
         Response response;
-        if (photo == null) {
+        if (user == null) {
             response = Response.status(Status.NO_CONTENT).build();
         } else {
-            try {          
-                response = Response.status(Status.OK).entity(photoDAO.createPhoto(photo)).build();
+            try {
+                response = Response.status(Status.OK).entity(userDAO.createUser(user)).build();
             } catch (CustomException cException) {
                 response = Response.status(Status.BAD_REQUEST).entity(cException.toString()).build();
             }
@@ -41,13 +40,13 @@ public class PhotoService {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response UpdatePhoto(@PathParam("id") int id, Photo photo) {
+    public Response UpdateUser(@PathParam("id") int id, User user) {
         Response response;
-        if (photo == null) {
+        if (user == null) {
             response = Response.status(Status.NO_CONTENT).build();
         } else {
             try {
-                response = Response.status(Status.OK).entity(photoDAO.updatePhoto(id, photo)).build();
+                response = Response.status(Status.OK).entity(userDAO.updateUser(id, user)).build();
             } catch (CustomException cException) {
                 response = Response.status(Status.BAD_REQUEST).entity(cException.toString()).build();
             }
@@ -57,10 +56,10 @@ public class PhotoService {
 
     @DELETE
     @Path("{id}")
-    public Response deletePhoto(@PathParam("id") int id) {
+    public Response deleteUser(@PathParam("id") int id) {
         Response response;
         try {
-            response = Response.status(Status.OK).entity(photoDAO.deletePhoto(id)).build();
+            response = Response.status(Status.OK).entity(userDAO.deleteUser(id)).build();
         } catch (CustomException cException){
             response = Response.status(Status.BAD_REQUEST).entity(cException.toString()).build();
         }
@@ -69,13 +68,13 @@ public class PhotoService {
 
     @GET
     @Path("/all")
-    public Response getAllPhotos() {
-        return Response.status(Status.OK).entity(photoDAO.findAllPhotos()).build();
+    public Response getAllUsers() {
+        return Response.status(Status.OK).entity(userDAO.findAllUsers()).build();
     }
 
     @GET
     @Path("{id}")
-    public Response getPhoto(@PathParam("id") int id) {
-        return Response.status(Status.OK).entity(photoDAO.findPhotoById(id)).build();
+    public Response getUser(@PathParam("id") int id) {
+        return Response.status(Status.OK).entity(userDAO.findUserById(id)).build();
     }
 }

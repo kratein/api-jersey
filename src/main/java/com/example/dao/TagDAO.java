@@ -3,6 +3,8 @@ package com.example.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +39,25 @@ public class TagDAO extends AbstractDao<Tag> {
     
     public List<Tag> findAllTags() {
         return getListFromRequest("1", null);
+    }
+
+    public List<Tag> findTagsByIdActivity(int id_activity) {
+        List<Tag> tags = new ArrayList<>();
+        ResultSet result;
+        Statement statement;
+        try {
+            statement = Database.getInstance().createStatement();
+            result = statement.executeQuery("SELECT * from has_tags WHERE id_hobbyactivity="+id_activity);
+            while (result.next()) {
+                Tag tag = findTagById(result.getInt("id_tag"));
+                if (!tags.contains(tag)) {
+                    tags.add(tag);
+                }
+            }
+        } catch(SQLException sqlException) {
+            throw new CustomException("An error has occured, can't connect to databse",4);
+        }
+        return tags;
     }
 
     public Tag findTagById(int id) {

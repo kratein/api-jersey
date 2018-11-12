@@ -106,7 +106,7 @@ public class Activity extends Entities implements Serializable {
     }
 
     public Activity(int id, String label, String description, String web_site, int min_older, String street,
-            String zip_code, String cover, String city, String slogan, Double price) {
+            String zip_code, String city, String cover, String slogan, Double price) {
         this.id = id;
         this.label = label;
         this.description = description;

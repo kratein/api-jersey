@@ -68,20 +68,21 @@ public class ActivityService {
 
     @GET
     @Path("/all")
-    public Response getAllActivitys() {
+    public Response getAllActivities() {
         return Response.status(Status.OK).entity(activityDAO.findAllActivities()).build();
     }
 
     @GET
     @Path("{id}")
     public Response getActivity(@PathParam("id") int id) {
-        Response response;
-        Activity activity = activityDAO.findActivityById(id);
-        if (activity != null) {
-            response = Response.status(Status.OK).entity(activity).build();
-        } else {
-            response = Response.status(Status.NOT_FOUND).entity(activity).build();
-        }
-        return response;
+        return Response.status(Status.OK).entity(activityDAO.findActivityById(id)).build();
     }
+
+    @GET
+    @Path("/tag/{id}")
+    public Response getActivityBytag(@PathParam("id") int id_tag) {  
+        return Response.status(Status.OK).entity(activityDAO.findActivitiesByIdtag(id_tag)).build();
+    }
+
+    
 }

@@ -3,6 +3,8 @@ package com.example.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,10 +22,13 @@ public class ActivityDAO extends AbstractDao<Activity> {
     public ActivityDAO() {
         super(SQL_SELECT_REQUEST);
     }
-    
+
     @Override
     protected void getObjectFromResultSet(Map<Integer, Activity> map, ResultSet result) throws SQLException {
-        Activity activity = new Activity(result.getInt("id"), result.getString("label"), result.getString("description"), result.getString("web_site"), result.getInt("minimum_older"), result.getString("street"), result.getString("zip_code"), result.getString("city"), result.getString("cover"), result.getString("slogan"), result.getDouble("price"));
+        Activity activity = new Activity(result.getInt("id"), result.getString("label"),
+                result.getString("description"), result.getString("web_site"), result.getInt("minimum_older"),
+                result.getString("street"), result.getString("zip_code"), result.getString("city"),
+                result.getString("cover"), result.getString("slogan"), result.getDouble("price"));
         map.put(activity.getId(), activity);
     }
 
@@ -53,11 +58,30 @@ public class ActivityDAO extends AbstractDao<Activity> {
         return activities != null && activities.size() > 0 ? activities.get(0) : null;
     }
 
+    public List<Activity> findActivitiesByIdtag(int id_tag) {
+        List<Activity> activities = new ArrayList<>();
+        ResultSet result;
+        Statement statement;
+        try {
+            statement = Database.getInstance().createStatement();
+            result = statement.executeQuery("SELECT * from has_tags WHERE id_tag=" + id_tag);
+            while (result.next()) {
+                Activity activity = findActivityById(result.getInt("id_tag"));
+                if (!activities.contains(activity)) {
+                    activities.add(activity);
+                }
+            }
+        } catch (SQLException sqlException) {
+            throw new CustomException("An error has occured, can't connect to databse", 4);
+        }
+        return activities;
+    }
+
     public Activity createActivity(Activity activity) {
         PreparedStatement statement = null;
         ResultSet result = null;
         if (activity == null) {
-            throw new CustomException(CustomException.ERROR_NULL,1);
+            throw new CustomException(CustomException.ERROR_NULL, 1);
         } else {
             boolean exists;
             try {
@@ -70,7 +94,7 @@ public class ActivityDAO extends AbstractDao<Activity> {
             } else {
                 try {
                     statement = getUpdateStatement(activity,
-                    "INSERT INTO hobbyactivity (id, label, description, web_site, minimum_older, street, zip_code, city, cover, slogan, price) VALUES (null,?,?,?,?,?,?,?,?,?,?)");
+                            "INSERT INTO hobbyactivity (id, label, description, web_site, minimum_older, street, zip_code, city, cover, slogan, price) VALUES (null,?,?,?,?,?,?,?,?,?,?)");
                     statement.executeUpdate();
                     result = statement.getGeneratedKeys();
                     if (result.next()) {
@@ -89,12 +113,13 @@ public class ActivityDAO extends AbstractDao<Activity> {
     public Activity updateActivity(int id, Activity activity) {
         PreparedStatement statement = null;
         if (activity == null) {
-            throw new CustomException(CustomException.ERROR_NULL,1);
+            throw new CustomException(CustomException.ERROR_NULL, 1);
         } else {
             if (this.findActivityById(id) != null) {
                 try {
-                    statement = getUpdateStatement(activity, 
-                    "UPDATE hobbyactivity SET label=?, description=?, web_site=?, minimum_older=?, street=?, zip_code=?, city=?, cover=?, slogan=?, price=? WHERE id=" + id);
+                    statement = getUpdateStatement(activity,
+                            "UPDATE hobbyactivity SET label=?, description=?, web_site=?, minimum_older=?, street=?, zip_code=?, city=?, cover=?, slogan=?, price=? WHERE id="
+                                    + id);
                     statement.executeUpdate();
                     activity.setId(id);
                 } catch (SQLException e) {
@@ -109,7 +134,7 @@ public class ActivityDAO extends AbstractDao<Activity> {
         return activity;
     }
 
-    public boolean deleteActivity (int id) {
+    public boolean deleteActivity(int id) {
         PreparedStatement statement = null;
         int deleted = 0;
         try {
