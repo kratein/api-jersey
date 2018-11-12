@@ -1,11 +1,10 @@
 package com.example.entities;
 
 import java.io.Serializable;
-import java.util.List;
 
 import com.example.entities.Entities;
 
-public class Activity extends Entities implements Serializable{
+public class Activity extends Entities implements Serializable {
     private static final long serialVersionUID = 1L;
     private String label;
     private String description;
@@ -13,17 +12,25 @@ public class Activity extends Entities implements Serializable{
     private int min_older;
     private String street;
     private String zip_code;
+    private String city;
     private String cover;
     private String slogan;
     private Double price;
 
     @Override
     public String toString() {
-        return "{" + " id='" + getId() + "'" + " label='" + getLabel() + "'" + ", description='" + getDescription()
-                + "'" + ", web_site='" + getWeb_site() + "'" + ", min_older='" + getMin_older() + "'" + ", street='"
-                + getStreet() + "'" + ", zip_code='" + getZip_code() + "'" + ", id_tag='" + getId_tag() + "'"
-                + ", cover='" + getCover() + "'" + ", slogan='" + getSlogan() + "'" + ", price='" + getPrice() + "'"
-                + "}";
+        return "{" + " label='" + getLabel() + "'" + ", description='" + getDescription() + "'" + ", web_site='"
+                + getWeb_site() + "'" + ", min_older='" + getMin_older() + "'" + ", street='" + getStreet() + "'"
+                + ", zip_code='" + getZip_code() + "'" + ", city='" + getCity() + "'" + ", cover='" + getCover() + "'"
+                + ", slogan='" + getSlogan() + "'" + ", price='" + getPrice() + "'" + "}";
+    }
+
+    public String getCity() {
+        return this.city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getLabel() {
@@ -99,7 +106,7 @@ public class Activity extends Entities implements Serializable{
     }
 
     public Activity(int id, String label, String description, String web_site, int min_older, String street,
-            String zip_code, String cover, String slogan, Double price) {
+            String zip_code, String cover, String city, String slogan, Double price) {
         this.id = id;
         this.label = label;
         this.description = description;
@@ -107,6 +114,7 @@ public class Activity extends Entities implements Serializable{
         this.min_older = min_older;
         this.street = street;
         this.zip_code = zip_code;
+        this.city = city;
         this.cover = cover;
         this.slogan = slogan;
         this.price = price;

@@ -1,9 +1,5 @@
 package com.example.services;
 
-import com.example.dao.PhotoDAO;
-import com.example.entities.Photo;
-import com.example.exception.CustomException;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -16,21 +12,24 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-@Path("/photo")
-@Produces(MediaType.APPLICATION_JSON)
-public class PhotoService {
+import com.example.dao.TagDAO;
+import com.example.entities.Tag;
+import com.example.exception.CustomException;
 
-    private final PhotoDAO photoDAO = new PhotoDAO();
+@Path("/tag")
+@Produces(MediaType.APPLICATION_JSON)
+public class TagService {
+    private final TagDAO tagDAO = new TagDAO();
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createPhoto(Photo photo) {
+    public Response createTag(Tag tag) {
         Response response;
-        if (photo == null) {
+        if (tag == null) {
             response = Response.status(Status.NO_CONTENT).build();
         } else {
-            try {          
-                response = Response.status(Status.OK).entity(photoDAO.createPhoto(photo)).build();
+            try {
+                response = Response.status(Status.OK).entity(tagDAO.createTag(tag)).build();
             } catch (CustomException cException) {
                 response = Response.status(Status.BAD_REQUEST).entity(cException.toString()).build();
             }
@@ -41,13 +40,13 @@ public class PhotoService {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response UpdatePhoto(@PathParam("id") int id, Photo photo) {
+    public Response UpdateTag(@PathParam("id") int id, Tag tag) {
         Response response;
-        if (photo == null) {
+        if (tag == null) {
             response = Response.status(Status.NO_CONTENT).build();
         } else {
             try {
-                response = Response.status(Status.OK).entity(photoDAO.updatePhoto(id, photo)).build();
+                response = Response.status(Status.OK).entity(tagDAO.updateTag(id, tag)).build();
             } catch (CustomException cException) {
                 response = Response.status(Status.BAD_REQUEST).entity(cException.toString()).build();
             }
@@ -57,10 +56,10 @@ public class PhotoService {
 
     @DELETE
     @Path("{id}")
-    public Response deletePhoto(@PathParam("id") int id) {
+    public Response deleteTag(@PathParam("id") int id) {
         Response response;
         try {
-            response = Response.status(Status.OK).entity(photoDAO.deletePhoto(id)).build();
+            response = Response.status(Status.OK).entity(tagDAO.deleteTag(id)).build();
         } catch (CustomException cException){
             response = Response.status(Status.BAD_REQUEST).entity(cException.toString()).build();
         }
@@ -69,19 +68,19 @@ public class PhotoService {
 
     @GET
     @Path("/all")
-    public Response getAllPhotos() {
-        return Response.status(Status.OK).entity(photoDAO.findAllPhotos()).build();
+    public Response getAllTags() {
+        return Response.status(Status.OK).entity(tagDAO.findAllTags()).build();
     }
 
     @GET
     @Path("{id}")
-    public Response getPhoto(@PathParam("id") int id) {
+    public Response getTag(@PathParam("id") int id) {
         Response response;
-        Photo photo = photoDAO.findPhotoById(id);
-        if (photo != null) {
-            response = Response.status(Status.OK).entity(photo).build();
+        Tag tag = tagDAO.findTagById(id);
+        if (tag != null) {
+            response = Response.status(Status.OK).entity(tag).build();
         } else {
-            response = Response.status(Status.NOT_FOUND).entity(photo).build();
+            response = Response.status(Status.NOT_FOUND).entity(tag).build();
         }
         return response;
     }

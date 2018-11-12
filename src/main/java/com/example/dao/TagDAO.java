@@ -7,57 +7,52 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.Database;
-import com.example.entities.Photo;
+import com.example.entities.Tag;
 import com.example.exception.CustomException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class PhotoDAO extends AbstractDao<Photo> {
-    private static final Log LOG = LogFactory.getLog(PhotoDAO.class);
+public class TagDAO extends AbstractDao<Tag> {
+    private static final Log LOG = LogFactory.getLog(TagDAO.class);
+    private static final String SQL_SELECT_REQUEST = "SELECT * FROM tag WHERE ";
 
-    private static final String SQL_SELECT_REQUEST = "SELECT * FROM photo WHERE ";
-
-    public PhotoDAO() {
+    public TagDAO() {
         super(SQL_SELECT_REQUEST);
     }
 
     @Override
-    protected void getObjectFromResultSet(Map<Integer, Photo> map, ResultSet result) throws SQLException {
-        Photo photo = new Photo(result.getInt("id"), result.getString("title"), result.getString("path"),
-                result.getString("description"), result.getInt("id_hobbyactivity"));
-        map.put(photo.getId(), photo);
+    protected void getObjectFromResultSet(Map<Integer, Tag> map, ResultSet result) throws SQLException {
+        Tag tag = new Tag(result.getInt("id"), result.getString("label"));
+        map.put(tag.getId(), tag);
     }
 
-    @Override
-    protected PreparedStatement getUpdateStatement(Photo photo, String request) throws SQLException {
+	@Override
+	protected PreparedStatement getUpdateStatement(Tag tag, String request) throws SQLException {
         PreparedStatement statement = null;
         statement = Database.getInstance().prepareStatement(request, PreparedStatement.RETURN_GENERATED_KEYS);
-        statement.setString(1, photo.getTitle());
-        statement.setString(2, photo.getPath());
-        statement.setString(3, photo.getDescription());
-        statement.setInt(4, photo.getId_activity());
+        statement.setString(1, tag.getLabel());
         return statement;
     }
-
-    public List<Photo> findAllPhotos() {
+    
+    public List<Tag> findAllTags() {
         return getListFromRequest("1", null);
     }
 
-    public Photo findPhotoById(int id) {
-        List<Photo> photos = getListFromRequest("id=?", id);
-        return photos != null && photos.size() > 0 ? photos.get(0) : null;
+    public Tag findTagById(int id) {
+        List<Tag> tags = getListFromRequest("id=?", id);
+        return tags != null && tags.size() > 0 ? tags.get(0) : null;
     }
 
-    public Photo createPhoto(Photo photo) {
+    public Tag createTag(Tag tag) {
         PreparedStatement statement = null;
         ResultSet result = null;
-        if (photo == null) {
-            throw new CustomException(CustomException.ERROR_NULL, 1);
+        if (tag == null) {
+            throw new CustomException(CustomException.ERROR_NULL,1);
         } else {
             boolean exists;
             try {
-                exists = (this.findPhotoById(photo.getId()) != null);
+                exists = (this.findTagById(tag.getId()) != null);
             } catch (NullPointerException Ex) {
                 exists = false;
             }
@@ -65,13 +60,12 @@ public class PhotoDAO extends AbstractDao<Photo> {
                 throw new CustomException(CustomException.ERROR_DUPLICATE_ID, 2);
             } else {
                 try {
-                    statement = getUpdateStatement(photo,
-                            "INSERT INTO photo (id, title, path, description, id_hobbyactivity)"
-                                    + " VALUES (null,?,?,?,?)");
+                    statement = getUpdateStatement(tag,
+                    "INSERT INTO tag (id, label) VALUES (null,?)");
                     statement.executeUpdate();
                     result = statement.getGeneratedKeys();
                     if (result.next()) {
-                        photo.setId(result.getInt(1));
+                        tag.setId(result.getInt(1));
                     }
                 } catch (SQLException e) {
                     LOG.debug(e.getMessage());
@@ -80,20 +74,20 @@ public class PhotoDAO extends AbstractDao<Photo> {
                 }
             }
         }
-        return photo;
+        return tag;
     }
 
-    public Photo updatePhoto(int id, Photo photo) {
+    public Tag updateTag(int id, Tag tag) {
         PreparedStatement statement = null;
-        if (photo == null) {
-            throw new CustomException(CustomException.ERROR_NULL, 1);
+        if (tag == null) {
+            throw new CustomException(CustomException.ERROR_NULL,1);
         } else {
-            if (this.findPhotoById(id) != null) {
+            if (this.findTagById(id) != null) {
                 try {
-                    statement = getUpdateStatement(photo,
-                            "UPDATE photo SET title=?, path=?, description=?, id_hobbyactivity=? WHERE id=" + id);
+                    statement = getUpdateStatement(tag, 
+                    "UPDATE tag SET label=? WHERE id=" + id);
                     statement.executeUpdate();
-                    photo.setId(id);
+                    tag.setId(id);
                 } catch (SQLException e) {
                     LOG.debug(e.getMessage());
                 } finally {
@@ -103,14 +97,14 @@ public class PhotoDAO extends AbstractDao<Photo> {
                 throw new CustomException(CustomException.ERROR_NOTFOUND, 3);
             }
         }
-        return photo;
+        return tag;
     }
 
-    public boolean deletePhoto(int id) {
+    public boolean deleteTag (int id) {
         PreparedStatement statement = null;
         int deleted = 0;
         try {
-            statement = Database.getInstance().prepareStatement("DELETE FROM photo WHERE id=?");
+            statement = Database.getInstance().prepareStatement("DELETE FROM tag WHERE id=?");
             statement.setInt(1, id);
             deleted = statement.executeUpdate();
         } catch (Exception e) {
@@ -120,4 +114,5 @@ public class PhotoDAO extends AbstractDao<Photo> {
         }
         return deleted > 0;
     }
+
 }
